@@ -1,3 +1,5 @@
+import 'package:example/db_helper.dart';
+import 'package:example/task_model.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -56,15 +58,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  TaskHelper taskHelper = TaskHelper();
+
+  @override
+  void initState() {
+    Task task = Task(
+      desc: 'Testando sqflite_db_viewer',
+    );
+    taskHelper.saveTask(task).then((value) => print('id: $value'));
+    super.initState();
+  }
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      taskHelper.getAllTasks().then((value) => print('tasks: $value'));
     });
   }
 
