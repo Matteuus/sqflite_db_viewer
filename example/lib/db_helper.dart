@@ -26,7 +26,7 @@ class TaskHelper {
 
   Future<Database> initDb() async {
     final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, "tasks.db");
+    final path = join(databasesPath, "ztasks.db");
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int newerVersion) async {
       await db.execute(
@@ -36,50 +36,29 @@ class TaskHelper {
     });
   }
 
-  // Future<Task> saveTask(Task task) async {
-  //   Database dbContact = await db;
-  //   task.id = await dbContact.insert(taskTable, task.toMap());
-  //   return task;
-  // }
-
   // Salva task no banco
   Future<Task> saveTask(Task task) async {
-    task.id = await dbViewer?.saveItem(item: task);
+    await db;
+    task.id = await dbViewer!.saveItem(item: task);
     return task;
   }
 
-  // Future<Task?> getTask(int id) async {
-  //   Database dbTask = await db;
-  //   List<Map<String, dynamic>> maps = await dbTask.query(taskTable,
-  //       columns: [idColumn, descColumn],
-  //       where: "$idColumn = ?",
-  //       whereArgs: [id]);
-  //   if (maps.isNotEmpty) {
-  //     return Task.fromMap(maps.first);
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
   Future<Task?> getTask(int id) async {
+    await db;
     return await dbViewer?.getItem(
         id: id, columnId: idColumn, columnList: [idColumn, descColumn]);
   }
 
-  // Future<List> getAllTasks() async {
-  //   Database dbContact = await db;
-  //   List listMap = await dbContact.rawQuery("SELECT * FROM $taskTable");
-  //   List<Task> listContact = [];
-  //   for (Map<String, dynamic> m in listMap) {
-  //     listContact.add(Task.fromMap(m));
-  //   }
-  //   return listContact;
-  // }
-
   Future<List<dynamic>?> getAllTasks() async {
-    // Database dbContact = await db;
-    Task task = Task();
-    return await dbViewer?.getAllItems(item: task);
+    await db;
+    List<Task> listTask = [];
+    List<Map<String, dynamic>>? listMap = await dbViewer?.getAllItems();
+
+    for (Map<String, dynamic> m in listMap!) {
+      listTask.add(Task.fromMap(m));
+    }
+
+    return listTask;
   }
 
   Future<int> deleteTask(int id) async {

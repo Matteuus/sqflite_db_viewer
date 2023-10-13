@@ -33,6 +33,6 @@ class Task {
 
   @override
   String toString() {
-    return "Task(id: $id, name: $desc, , check: $check)";
+    return "Task(id: $id, desc: $desc , check: $check)";
   }
 }
